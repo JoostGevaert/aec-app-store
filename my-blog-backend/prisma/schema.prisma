@@ -9,3 +9,43 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Article {
+  id        String           @id @default(uuid())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  slug      String           @unique
+  title     String           @unique
+  content   ArticleContent[]
+  // author    User     @relation(fields: [authorId], references: [id])
+  // authorId  String
+  upvotes   Int
+  comments   Comment[]
+}
+
+model ArticleContent {
+  id        String  @id @default(uuid())
+  content   String
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId String
+
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  comment   String
+  article   Article  @relation(fields: [articleId], references: [id])
+  articleId String
+  // author    User     @relation(fields: [authorId], references: [id])
+  // authorId  String
+}
+
+// model User {
+//   id       String    @id @default(uuid())
+//   email    String    @unique
+//   name     String
+//   posts    Article[]
+//   comments Comment[]
+// }
